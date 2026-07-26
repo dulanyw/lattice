@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-24T00:00:00.000Z",
+  "templates": [
+    {
+      "id": "daily",
+      "icon": "☀",
+      "name": "Daily note",
+      "description": "Notes, tasks, and decisions for today.",
+      "body": "# {{date}}\n\n## Notes\n\n## Tasks\n\n## Decisions\n"
+    },
+    {
+      "id": "meeting",
+      "icon": "◎",
+      "name": "Meeting",
+      "description": "Attendees, discussion, decisions, actions.",
+      "body": "# Meeting title\n\n## Attendees\n\n## Discussion\n\n## Decisions\n\n## Action items\n- [ ] \n"
+    },
+    {
+      "id": "project",
+      "icon": "◆",
+      "name": "Project",
+      "description": "Objective, status, decisions, and tasks.",
+      "body": "# Project name\n\n## Objective\n\n## Current status\n\n## Decisions\n\n## Tasks\n- [ ] \n"
+    },
+    {
+      "id": "research",
+      "icon": "◎",
+      "name": "Research",
+      "description": "Question, evidence, findings, and sources.",
+      "body": "# Research topic\n\n## Question\n\n## Evidence\n\n## Findings\n\n## Sources\n"
+    },
+    {
+      "id": "client-call",
+      "icon": "↗",
+      "name": "Client call",
+      "description": "Context, talking points, notes, follow-up.",
+      "body": "# Client — Call\n\n## Context\n\n## Talking points\n\n## Notes\n\n## Follow-up\n- [ ] \n"
+    },
+    {
+      "id": "blank",
+      "icon": "□",
+      "name": "Blank",
+      "description": "Start with an empty Markdown note.",
+      "body": ""
+    }
+  ]
+}

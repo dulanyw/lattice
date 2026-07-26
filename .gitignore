@@ -1,0 +1,10 @@
+.go-cache/
+.go-path/
+lattice-port.txt
+*.log
+*.tmp
+*.zip
+dist/
+release/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,29 @@
+# Lattice release allowlist
+
+Use this list when preparing a public source archive or Git release. Include only these project files and directories unless a release note explicitly explains why something else is needed.
+
+- `.gitignore`
+- `.lattice/templates.json`
+- `Notes/*.md`
+- `app.js`
+- `lattice-core.js`
+- `index.html`
+- `styles.css`
+- `server.go`
+- `server_test.go`
+- `go.mod`
+- `build-server.cmd`
+- `launch.cmd`
+- `launch.ps1`
+- `lattice-port.example.txt`
+- `lattice-server.exe`
+- `README.md`
+- `START_HERE.md`
+- `CONTRIBUTING.md`
+- `SECURITY.md`
+- `LICENSE`
+- `VERSION`
+- `CHECKSUMS.txt`
+- `tests/security-regression.test.js`
+
+Do not include private notes, browser profile data, local cache folders, generated Go cache/path folders, personal audit scratch files, or machine-specific config. Rebuild `lattice-server.exe` from the published source state and regenerate `CHECKSUMS.txt` for binary releases.

@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' http: https:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Lattice — Local Knowledge Workspace</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <header class="topbar">
+      <div class="brand" aria-label="Lattice home">
+        <div class="brand-mark"><span></span><span></span><span></span><span></span></div>
+        <span class="brand-name">Lattice</span>
+        <span class="local-badge">LOCAL</span>
+      </div>
+
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <button class="nav-action primary" id="newNoteBtn" title="New note (Ctrl+N)">
+          <span class="icon">＋</span> New note
+        </button>
+        <button class="nav-action" id="dailyBtn"><span class="icon">◫</span> Daily</button>
+        <button class="nav-action" id="templatesBtn"><span class="icon">◇</span> Templates</button>
+        <button class="nav-action" id="aiModeBtn"><span class="icon">✦</span> AI context</button>
+        <button class="nav-action" id="tagsBtn"><span class="icon">#</span> Tags</button>
+      </nav>
+
+      <div class="topbar-tools">
+        <button class="icon-btn" id="resetLayoutBtn" title="Reset panel layout" aria-label="Reset panel layout">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM9 4v16M9 10h11"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.14.38.35.72.6 1 .29.26.67.4 1.1.4h.09v4h-.09c-.43 0-.81.14-1.1.4-.25.28-.46.62-.6 1Z"/></svg>
+        </button>
+        <button class="workspace-status" id="workspaceStatusBtn" title="Open workspace settings"><i></i><span id="workspaceStatusName">Demo workspace</span></button>
+      </div>
+    </header>
+
+    <main class="workspace" id="workspace">
+      <aside class="notes-panel panel" id="notesPanel">
+        <div class="notes-full">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+            <input id="noteSearch" type="search" placeholder="Search all notes…" autocomplete="off">
+            <kbd>⌘ K</kbd>
+          </div>
+
+          <div class="drawer-heading">
+            <div>
+              <span class="eyebrow">NOTES</span>
+              <span class="result-count" id="resultCount">12</span>
+            </div>
+            <select class="note-sort-select" id="noteSortSelect" title="Sort notes">
+              <option value="created">Newest</option>
+              <option value="recent">Recently opened</option>
+            </select>
+            <button class="panel-action" id="collapseNotesBtn" title="Collapse note drawer">‹</button>
+          </div>
+
+          <div class="tag-filter-bar" id="tagFilterBar" hidden>
+            <span>#<b id="activeTagName"></b></span>
+            <button id="clearTagFilter" title="Clear tag filter">×</button>
+          </div>
+
+          <div class="ai-selection-bar" id="aiSelectionBar">
+            <div><strong id="selectionCount">0</strong> selected for context</div>
+            <div class="selection-actions">
+              <button id="selectResultsBtn">Select results</button>
+              <button id="clearSelectionBtn">Clear</button>
+              <button id="exitAiModeBtn" title="Exit selection mode">×</button>
+            </div>
+          </div>
+
+          <div class="note-list" id="noteList" aria-label="Notes"></div>
+        </div>
+        <button class="collapsed-rail notes-rail" id="notesRail" title="Expand notes">
+          <span>NOTES</span><b id="railNoteCount">12</b>
+        </button>
+      </aside>
+
+      <div class="vertical-resizer" id="drawerResizer" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Resize note drawer" aria-valuemin="205" aria-valuemax="470" aria-valuenow="276"></div>
+
+      <section class="main-stage" id="mainStage">
+        <section class="tasks-panel panel" id="tasksPanel">
+          <div class="section-full">
+            <header class="section-header">
+              <div class="section-title">
+                <span class="section-icon task-icon">✓</span>
+                <h2>Tasks</h2>
+                <span class="count-pill" id="openTaskCount">7 open</span>
+              </div>
+              <div class="section-controls">
+                <button class="filter-chip" id="completedFilterBtn" aria-pressed="false">Hide completed</button>
+                <span class="control-divider"></span>
+                <button class="panel-action expand-btn" data-expand="tasks" title="Expand tasks">↗</button>
+              </div>
+            </header>
+            <div class="task-table-wrap">
+              <table class="task-table">
+                <colgroup id="taskColgroup">
+                  <col style="width:44px">
+                  <col style="width:310px">
+                  <col style="width:132px">
+                  <col style="width:118px">
+                  <col style="width:150px">
+                  <col style="width:165px">
+                  <col style="width:260px">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th data-sort="completed"><button class="sort-header" aria-label="Sort by completion">✓<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                    <th data-sort="title"><button class="sort-header">Task<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                    <th data-sort="due"><button class="sort-header">Due<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                    <th data-sort="priority"><button class="sort-header">Priority<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                    <th data-sort="waiting"><button class="sort-header">Waiting<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                    <th data-sort="source"><button class="sort-header">Source<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                    <th data-sort="notes"><button class="sort-header">Notes<span class="sort-indicator"></span></button><i class="column-resizer"></i></th>
+                  </tr>
+                </thead>
+                <tbody id="taskList"></tbody>
+              </table>
+            </div>
+          </div>
+          <button class="collapsed-rail horizontal-rail" data-restore="tasks">
+            <span>✓ TASKS</span><b id="taskRailCount">7 open</b>
+          </button>
+        </section>
+
+        <div class="horizontal-resizer" id="taskResizer" role="separator" tabindex="0" aria-orientation="horizontal" aria-label="Resize tasks and editor" aria-valuemin="18" aria-valuemax="68" aria-valuenow="34"><span></span></div>
+
+        <section class="lower-stage" id="lowerStage">
+          <section class="editor-panel panel" id="editorPanel">
+            <div class="section-full editor-full">
+              <header class="editor-header">
+                <div class="note-identity">
+                  <div class="note-title-row">
+                    <h1 id="activeTitle">Project Northstar</h1>
+                    <span class="status-dot">Active</span>
+                    <div class="active-note-tags" id="activeNoteTags">
+                      <div class="tag-chip-list" id="activeTagChips"></div>
+                      <div class="tag-entry">
+                        <span>#</span><input id="tagInput" type="text" placeholder="add tag" aria-label="Add tag to active note">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="editor-tools">
+                  <span class="save-status" id="saveStatus"><i></i> Saved</span>
+                  <button class="tool-button" id="backlinksBtn" title="Show notes that link here">↗ <span id="backlinkCount">0</span></button>
+                  <button class="panel-action expand-btn" data-expand="editor" title="Expand editor">↗</button>
+                  <div class="note-actions-wrap">
+                    <button class="more-button" id="noteActionsBtn" aria-label="Note actions" aria-expanded="false">•••</button>
+                    <div class="note-actions-menu" id="noteActionsMenu" hidden>
+                      <button data-note-action="copy-link"><span>⧉</span><div><b>Copy wiki link</b><small>[[Current note]]</small></div></button>
+                      <button data-note-action="duplicate"><span>＋</span><div><b>Duplicate note</b><small>Create an editable copy</small></div></button>
+                      <button data-note-action="location"><span>⌂</span><div><b>File location</b><small>View or create the workspace file</small></div></button>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <div class="editor-body">
+                <div class="line-numbers" id="lineNumbers"></div>
+                <textarea id="markdownEditor" spellcheck="false" aria-label="Markdown editor"></textarea>
+              </div>
+              <footer class="editor-footer">
+                <span>Markdown</span>
+                <span id="wordCount">0 words</span>
+                <span class="footer-spacer"></span>
+                <span>UTF-8</span>
+                <span>Ln <b id="cursorLine">1</b>, Col <b id="cursorCol">1</b></span>
+              </footer>
+            </div>
+            <button class="collapsed-rail horizontal-rail" data-restore="editor">
+              <span>⌑ MARKDOWN</span><b id="editorRailTitle">Project Northstar</b>
+            </button>
+          </section>
+
+          <div class="horizontal-resizer ai-resizer" id="aiResizer" role="separator" tabindex="0" aria-orientation="horizontal" aria-label="Resize AI panel" aria-valuemin="20" aria-valuemax="70" aria-valuenow="34"><span></span></div>
+
+          <section class="ai-panel panel" id="aiPanel">
+            <div class="section-full ai-full">
+              <header class="section-header ai-header">
+                <div class="section-title">
+                  <span class="section-icon ai-icon">✦</span>
+                  <div><h2>Ask your notes</h2><p><span id="aiContextCount">0</span> notes in context</p></div>
+                </div>
+                <div class="section-controls">
+                  <button class="filter-chip" id="revealContextBtn">Review context</button>
+                  <button class="panel-action expand-btn" data-expand="ai" title="Expand AI">↗</button>
+                  <button class="panel-action" id="collapseAiBtn" title="Collapse AI">⌄</button>
+                </div>
+              </header>
+              <div class="ai-content">
+                <div class="ai-empty" id="aiEmptyState">
+                  <span>✦</span>
+                  <p>Select notes, then ask a question across your context.</p>
+                </div>
+                <div class="ai-thread" id="aiThread" aria-live="polite"></div>
+                <div class="prompt-box">
+                  <textarea id="aiPrompt" placeholder="Ask a question about the selected notes…"></textarea>
+                  <button id="aiSendBtn" title="Send prompt">↑</button>
+                </div>
+              </div>
+            </div>
+            <button class="collapsed-rail horizontal-rail ai-collapsed active" id="aiRail">
+              <span>✦ AI WORKSPACE</span><b id="aiRailCount">0 notes selected</b>
+            </button>
+          </section>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="templateModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="templateModalTitle">
+      <header><div><span class="eyebrow">STARTING POINTS</span><h2 id="templateModalTitle">Choose a template</h2></div><div class="modal-header-actions"><button id="manageTemplatesBtn">Manage templates</button><button class="modal-close" data-close-modal aria-label="Close dialog">×</button></div></header>
+      <div class="template-grid" id="templateGrid"></div>
+      <p class="modal-note">Templates replace the current note only while it is blank.</p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="templateManagerModal" hidden>
+    <section class="modal template-manager-modal" role="dialog" aria-modal="true" aria-labelledby="templateManagerTitle">
+      <header><div><span class="eyebrow">TEMPLATE LIBRARY</span><h2 id="templateManagerTitle">Manage templates</h2></div><button class="modal-close" data-close-modal aria-label="Close dialog">×</button></header>
+      <div class="template-manager">
+        <aside>
+          <button class="new-template-btn" id="newTemplateBtn">＋ New template</button>
+          <div class="template-manager-list" id="templateManagerList"></div>
+        </aside>
+        <form id="templateForm">
+          <input type="hidden" name="templateId">
+          <div class="template-form-heading">
+            <label><span>Emoji</span><input name="icon" maxlength="4" required></label>
+            <label><span>Name</span><input name="name" required></label>
+          </div>
+          <label><span>Description</span><input name="description"></label>
+          <label class="template-body-field"><span>Markdown template</span><textarea name="body" spellcheck="false"></textarea></label>
+          <footer><button type="button" class="danger-button" id="deleteTemplateBtn">Delete</button><span></span><button type="button" id="moveTemplateUpBtn">Move up</button><button type="button" id="moveTemplateDownBtn">Move down</button><button type="submit" class="save-settings">Save template</button></footer>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="tagsModal" hidden>
+    <section class="modal tags-modal" role="dialog" aria-modal="true" aria-labelledby="tagsModalTitle">
+      <header><div><span class="eyebrow">WORKSPACE INDEX</span><h2 id="tagsModalTitle">Tags</h2></div><button class="modal-close" data-close-modal aria-label="Close dialog">×</button></header>
+      <div class="tag-summary"><span id="tagCount">0 tags</span><button id="showAllTagsBtn">Show all notes</button></div>
+      <div class="tag-grid" id="tagGrid"></div>
+      <p class="modal-note">Selecting a tag filters both the note drawer and global tasks.</p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <section class="modal settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+      <header><div><span class="eyebrow">LOCAL PREFERENCES</span><h2 id="settingsModalTitle">Settings</h2></div><button class="modal-close" data-close-modal aria-label="Close dialog">×</button></header>
+      <form id="settingsForm">
+        <div class="settings-section">
+          <h3>Workspace</h3>
+          <div class="workspace-picker">
+            <div class="workspace-folder-icon">⌂</div>
+            <div class="workspace-folder-copy">
+              <b id="workspaceFolderName">No folder selected</b>
+              <small id="workspaceFolderDetail">Choose the folder containing your Markdown files.</small>
+            </div>
+            <button type="button" id="chooseWorkspaceBtn">Choose folder</button>
+          </div>
+          <label class="setting-field tab-name-setting">
+            <span>Browser tab name</span>
+            <span class="tab-name-control">
+              <input type="text" name="tabName" id="tabNameInput" maxlength="80" placeholder="💼 Client work">
+              <small>Unique to this open tab; emoji are supported.</small>
+            </span>
+          </label>
+          <label class="setting-field tab-name-setting">
+            <span>Pinned tab icon</span>
+            <span class="tab-name-control">
+              <input type="text" name="tabIcon" id="tabIconInput" maxlength="8" placeholder="emoji">
+              <small>Emoji favicon for this open tab. Useful when the tab is pinned.</small>
+            </span>
+          </label>
+          <div class="system-actions">
+            <button type="button" id="reconnectWorkspaceBtn">Check permission</button>
+            <button type="button" id="rebuildIndexBtn">Reload workspace</button>
+            <button type="button" id="regenerateWorkspaceIdBtn">Regenerate identity</button>
+            <button type="button" id="forgetWorkspaceBtn">Forget folder</button>
+          </div>
+          <div class="system-status-grid">
+            <div><span>Folder access</span><b id="folderPermissionStatus">Not configured</b></div>
+            <div><span>Markdown files</span><b id="markdownFileCount">—</b></div>
+            <div><span>Browser storage</span><b id="browserStorageStatus">Checking…</b></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Appearance</h3>
+          <div class="theme-options">
+            <label class="theme-card"><input type="radio" name="theme" value="midnight"><span class="theme-preview midnight"></span><b>Midnight</b></label>
+            <label class="theme-card"><input type="radio" name="theme" value="studio"><span class="theme-preview studio"></span><b>Studio</b></label>
+            <label class="theme-card"><input type="radio" name="theme" value="paper"><span class="theme-preview paper"></span><b>Paper</b></label>
+          </div>
+          <label class="setting-row"><span><b>Accent color</b><small>Used for active notes, selections, and status.</small></span><input type="color" name="accent" value="#c8ff56"></label>
+        </div>
+        <div class="settings-section">
+          <h3>Editing</h3>
+          <label class="setting-row"><span><b>Autosave delay</b><small>Time after typing stops.</small></span><select name="autosaveMs"><option value="250">250 ms</option><option value="500">500 ms</option><option value="1000">1 second</option><option value="2000">2 seconds</option></select></label>
+          <label class="setting-row"><span><b>Show backlinks</b><small>Display backlink count in the editor toolbar.</small></span><input class="toggle" type="checkbox" name="showBacklinks"></label>
+          <label class="setting-row"><span><b>Clickable editor links</b><small>Ctrl/Cmd-click web, wiki, and workspace Markdown links.</small></span><input class="toggle" type="checkbox" name="clickableLinks"></label>
+        </div>
+        <div class="settings-section">
+          <h3>Local AI</h3>
+          <label class="setting-field"><span>Ollama endpoint</span><input type="url" name="ollamaEndpoint"></label>
+          <label class="setting-field"><span>Default model</span><span class="model-control"><select name="defaultModel" id="modelSelect"><option value="">Connect to load models</option></select><button type="button" id="refreshModelsBtn">Refresh</button></span></label>
+          <div class="connection-status" id="ollamaStatus"><i></i><span>Not checked</span></div>
+        </div>
+        <footer class="settings-footer"><button type="button" id="resetSettingsBtn">Restore defaults</button><button type="submit" class="save-settings">Save settings</button></footer>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="backlinksModal" hidden>
+    <section class="modal backlinks-modal" role="dialog" aria-modal="true" aria-labelledby="backlinksTitle">
+      <header><div><span class="eyebrow">REFERENCED BY</span><h2 id="backlinksTitle">Backlinks</h2></div><button class="modal-close" data-close-modal aria-label="Close dialog">×</button></header>
+      <div class="backlinks-list" id="backlinksList"></div>
+      <p class="modal-note">Backlinks are found by scanning wiki links such as <code>[[Note title]]</code>.</p>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="fileLocationModal" hidden>
+    <section class="modal file-location-modal" role="dialog" aria-modal="true" aria-labelledby="fileLocationTitle">
+      <header><div><span class="eyebrow">SOURCE FILE</span><h2 id="fileLocationTitle">File location</h2></div><button class="modal-close" data-close-modal aria-label="Close dialog">×</button></header>
+      <div class="file-location-card">
+        <div class="file-location-icon">MD</div>
+        <div><b id="fileLocationName">Not saved to disk</b><code id="fileLocationPath">No workspace file</code></div>
+      </div>
+      <div class="file-location-actions">
+        <button id="copyFileLocationBtn">Copy relative location</button>
+        <button id="openSavedFileBtn">Open saved file</button>
+        <button id="saveNoteToWorkspaceBtn" class="save-settings">Save to workspace</button>
+      </div>
+      <p class="modal-note" id="fileLocationNote">Browsers intentionally do not expose absolute Windows paths. Lattice can show the exact workspace-relative path and open the file through its granted handle.</p>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="lattice-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

@@ -18,6 +18,7 @@ Use this list when preparing a public source archive or Git release. Include onl
 - `lattice-port.example.txt`
 - `lattice-server.exe`
 - `README.md`
+- `MANUAL_TEST_PLAN.md`
 - `START_HERE.md`
 - `CONTRIBUTING.md`
 - `SECURITY.md`

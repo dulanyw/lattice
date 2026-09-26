@@ -1,12 +1,27 @@
 # Lattice
 
-Lattice is a local-first Markdown workspace for notes, tasks, templates, and optional Ollama-assisted querying.
+Lattice is a local-first workspace for notes, tasks, and optional AI assistance, using your notes for context. 
 
-Project status: early prototype. The app is useful for personal testing, but it is not yet a hardened multi-platform release.
+Notes are saved locally to Markdown files, so you always own your data. 
+
+It's dependency-free and OS-agnostic, so you can use it anywhere. 
+
+It uses minimal resources, so you can run it on a potato*.
+
+Search is fast, and all of your important info is front and center, making you more productive.
+
+AI is designed as both a first-class assistant and optional, letting it accelerate your work when you want and only when you want.
+
+It's helped me get a lot done - I hope it helps you, too.
+
+## Project status
+
+This app is currently in beta development. It's stable and works great for local personal use, but is not hardened for multi-user support, mission-critical applications, or unsecured exposure to the internet. 
+
+Standard disclaimers apply: not guaranteed suitable for any specific purpose, and you assume all risks with use.
 
 ## Supported environment
 
-- Windows is the primary tested launcher target.
 - Chromium-based browsers are required for full workspace read/write support because Lattice uses the File System Access API.
 - The bundled `lattice-server.exe` is Windows-only. Other platforms can build/adapt `server.go` or serve the folder from localhost.
 
@@ -18,6 +33,8 @@ Project status: early prototype. The app is useful for personal testing, but it 
 4. Grant read/write permission when the browser asks.
 
 By default Lattice opens at `http://localhost:4173`.
+
+`launch.cmd` starts `lattice-server.exe` when it is present. That executable is a tiny standalone local web server for this folder, so Lattice no longer needs Python on the host system. `launch.ps1` remains as a fallback for development copies where the executable has not been built yet.
 
 ## Multiple local instances
 
@@ -48,6 +65,12 @@ Recovery drafts are scoped to a workspace identity and base file metadata. Recov
 
 If you clone or copy a workspace and want the copy to have independent recovery drafts, open Settings and use `Regenerate identity` in the Workspace section. Lattice first tries to save current work, blocks if unresolved draft content remains, and clears obsolete recovery drafts for the previous identity after regeneration.
 
+Lattice recursively loads every `.md` file in that folder. New notes, including daily notes, are created under `Notes/`.
+
+Templates are stored permanently in `.lattice/templates.json` inside the selected workspace. The browser cache is only a fallback copy, so template edits can travel with a cloned workspace folder.
+
+If a write fails or permission is lost, Lattice keeps a recovery copy in browser storage and restores it when that workspace is loaded again.
+
 ## Tasks
 
 Tasks are Markdown checkboxes:
@@ -59,7 +82,7 @@ Tasks are Markdown checkboxes:
 
 ## Ollama and privacy
 
-Ollama is optional. When you ask the AI panel a question, Lattice sends your prompt and any explicitly selected context notes to the configured Ollama endpoint.
+Ollama is optional. You need to have Ollama and at least one model installed to use AI features. When you ask the AI panel a question, Lattice sends your prompt and any explicitly selected context notes to the configured Ollama endpoint.
 
 Loopback endpoints such as `http://localhost:11434` are treated as local. Remote endpoints trigger an explicit warning before note context is sent.
 
@@ -85,3 +108,5 @@ go vet ./...
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+*not a literal potato, but you get the idea. Like a low-powered SBC or something. 

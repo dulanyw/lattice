@@ -1,6 +1,6 @@
 # Contributing
 
-Lattice is currently an early prototype. Contributions should keep the app local-first, dependency-light, and transparent about data movement.
+Lattice is currently in beta. Contributions should keep the app local-first, dependency-light, and transparent about data movement.
 
 Before submitting changes:
 
